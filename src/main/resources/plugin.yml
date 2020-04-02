@@ -1,0 +1,9 @@
+name: ClearDrop
+main: io.github.starwishsama.cleardrop.ClearDropPlugin
+version: 1.0.0
+api: ["1.0.0"]
+load: STARTUP
+author: StarWishsama
+depend:
+  - "KotlinLib"
+  - "EasyAPI"
