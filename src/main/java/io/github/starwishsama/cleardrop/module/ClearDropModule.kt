@@ -47,14 +47,14 @@ object ClearDropModule : SimpleEasyAPIModule() {
         AsyncListenerAPI.add(object : AsyncListener {
             override fun onPlayerChatEvent(event: PlayerChatEvent) {
                 event.player.sendMessage(isCoolDown(event.player).toString())
-                if (event.message.contains(simpleConfig.safeGetData("requestMessage").requestMessage) && !isCoolDown(event.player)) {
+                if (event.message.contains(simpleConfig.safeGetData("clearDrop").requestMessage) && !isCoolDown(event.player)) {
                     runCleanTask(ClearDropPlugin.instance.server)
                 }
             }
         })
 
 
-        SimplePluginTaskAPI.delayRepeating(20 * simpleConfig.safeGetData("").clearDropCD, 20 * simpleConfig.safeGetData("").clearDropCD) { _, _ ->
+        SimplePluginTaskAPI.delayRepeating(20 * simpleConfig.safeGetData("clearDrop").clearDropCD, 20 * simpleConfig.safeGetData("clearDrop").clearDropCD) { _, _ ->
             runCleanTask(ClearDropPlugin.instance.server)
         }
 
@@ -71,7 +71,7 @@ object ClearDropModule : SimpleEasyAPIModule() {
     fun isCoolDown(player: Player): Boolean {
         if (nextRequestTime.containsKey(player)) {
             nextRequestTime[player]?.let { time ->
-                return System.currentTimeMillis() - time > simpleConfig.safeGetData("").clearDropCD
+                return System.currentTimeMillis() - time > simpleConfig.safeGetData("clearDrop").clearDropCD
             }
         } else {
             nextRequestTime[player] = System.currentTimeMillis()
