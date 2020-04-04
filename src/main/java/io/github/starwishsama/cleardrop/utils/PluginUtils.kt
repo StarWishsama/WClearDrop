@@ -8,83 +8,61 @@ import cn.nukkit.entity.passive.EntityWaterAnimal
 import cn.nukkit.entity.projectile.EntityProjectile
 import io.github.starwishsama.cleardrop.ClearDropPlugin
 import io.github.starwishsama.cleardrop.module.ClearDropModule
-import org.apache.commons.lang3.StringUtils
 import top.wetabq.easyapi.api.defaults.SimplePluginTaskAPI
+import top.wetabq.easyapi.utils.color
 
-var countDown = 30
+var countDown = getConfig().countDown
 
-fun clearDrop(): Int {
+fun clearDrop(): Array<Int> {
     val server = ClearDropPlugin.instance.server
     val levels = server.levels
-    var count = 0
+    var itemCount = 0
+    var entityCount = 0
     for ((_, level) in levels) {
-        if (!ClearDropModule.unCleanWorld.contains(level.name)) {
+        if (!getConfig().whiteListWorld.contains(level.name)) {
             for (entity in level.entities) {
                 // @TODO 配置判断是否清理生物
                 when {
                     entity is EntityItem -> {
-                        if (!ClearDropModule.unCleanItems.contains(entity.item.id)) {
+                        if (!getConfig().whiteListItems.contains(entity.item.id)) {
                             level.removeEntity(entity)
-                            count += entity.item.count
+                            itemCount += entity.item.count
                         }
                     }
-                    entity is EntityMob && ClearDropModule.cleanMonsters -> {
+                    entity is EntityMob && getConfig().doCleanMonster -> {
                         level.removeEntity(entity)
-                        count++
+                        entityCount++
                     }
-                    entity is EntityAnimal || entity is EntityWaterAnimal && ClearDropModule.cleanAnimals -> {
+                    entity is EntityAnimal || entity is EntityWaterAnimal && getConfig().doCleanAnimal -> {
                         level.removeEntity(entity)
-                        count++
+                        entityCount++
                     }
-                    entity is EntityProjectile && ClearDropModule.cleanProjectile -> {
+                    entity is EntityProjectile && getConfig().doCleanProjectile -> {
                         level.removeEntity(entity)
-                        count++
+                        entityCount++
                     }
                 }
             }
         }
     }
-    return count
+    return arrayOf(itemCount, entityCount)
 }
 
 fun runCleanTask(server: Server) {
     SimplePluginTaskAPI.repeating(20 * 1) { task, _ ->
         if (countDown > 0) {
             if (countDown == 30 || countDown == 10 || countDown == 5) {
-                server.broadcastMessage(ClearDropModule.prefix + ClearDropModule.warnMessage.replace("%second%", countDown.toString()))
+                server.broadcastMessage((getConfig().pluginPrefix + getConfig().warnMessage.replace("%second%", countDown.toString())).color())
             }
             countDown--
         } else {
-            server.broadcastMessage(ClearDropModule.prefix + ClearDropModule.cleanedMessage.replace("%count%", clearDrop().toString()))
+            val result = clearDrop()
+            server.broadcastMessage((getConfig().pluginPrefix + getConfig().cleanEntityMsg.replace("%item%", result[0].toString()).replace("%entity%", result[1].toString())).color())
             task.cancel()
         }
     }
 }
 
-fun string2list(string: String): MutableList<*> {
-    if (string != "[]") {
-        var split = string.substring(1, string.length - 1).split(", ")
-        var containsNumber = false
-        for (value in split) {
-            if (StringUtils.isNumeric(value)) {
-                containsNumber = true
-                break
-            }
-        }
-
-        if (containsNumber) {
-            val list = listOf<Int>()
-
-            for (value in split) {
-                try {
-                    list.plusElement(value.toInt())
-                } catch (e: NumberFormatException) {
-                    continue
-                }
-            }
-        } else return split.toMutableList()
-    }
-    return mutableListOf<String>()
-}
+fun getConfig() = ClearDropModule.simpleConfig.safeGetData("clearDrop")
 
 

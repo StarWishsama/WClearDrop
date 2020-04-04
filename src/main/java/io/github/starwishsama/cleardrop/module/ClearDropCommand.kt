@@ -4,11 +4,12 @@ import cn.nukkit.Player
 import cn.nukkit.command.CommandSender
 import cn.nukkit.command.data.CommandParameter
 import io.github.starwishsama.cleardrop.ClearDropPlugin
+import io.github.starwishsama.cleardrop.utils.getConfig
 import io.github.starwishsama.cleardrop.utils.runCleanTask
 import org.apache.commons.lang3.StringUtils
 import top.wetabq.easyapi.command.EasyCommand
 import top.wetabq.easyapi.command.EasySubCommand
-import top.wetabq.easyapi.config.defaults.SimpleConfigEntry
+import top.wetabq.easyapi.utils.color
 
 object ClearDropCommand : EasyCommand("cleardrop", "ClearDrop's Command") {
     init {
@@ -28,30 +29,29 @@ object ClearDropCommand : EasyCommand("cleardrop", "ClearDrop's Command") {
             override fun execute(sender: CommandSender, label: String, args: Array<out String>): Boolean {
                 if (sender is Player) {
                     if (sender.inventory.itemInHand != null) {
-                        if (ClearDropModule.unCleanItems.contains(sender.inventory.itemInHand.id)) {
-                            sender.sendMessage(ClearDropModule.prefix + "&c${sender.inventory.itemInHand.name} 已经在清理物品白名单里了")
+                        if (getConfig().whiteListItems.contains(sender.inventory.itemInHand.id)) {
+                            sender.sendMessage((getConfig().pluginPrefix + "&c${sender.inventory.itemInHand.name} 已经在清理物品白名单里了").color())
                         } else {
-                            ClearDropModule.unCleanItems.add(sender.inventory.itemInHand.id)
-                            ClearDropModule.simpleConfig.setPathValue(SimpleConfigEntry(ClearDropModule.UNCLEANED_ITEMS, ClearDropModule.unCleanItems))
-                            sender.sendMessage(ClearDropModule.prefix + "&a成功将物品 ${sender.inventory.itemInHand.name} 加入清理物品白名单")
+                            ClearDropModule.simpleConfig.safeGetData("clearDrop")
+                            getConfig().whiteListItems.plus(sender.inventory.itemInHand.id)
+                            sender.sendMessage((getConfig().pluginPrefix + "&a成功将物品 ${sender.inventory.itemInHand.name} 加入清理物品白名单").color())
                         }
                     } else {
-                        sender.sendMessage(ClearDropModule.prefix + "  /cleardrop add")
+                        sender.sendMessage(getConfig().pluginPrefix + "  /cleardrop add")
                     }
                 } else if (args.size == 2) {
                     if (StringUtils.isNumeric(args[1])) {
-                        if (ClearDropModule.unCleanItems.contains(args[1].toInt())) {
-                            sender.sendMessage(ClearDropModule.prefix + "&cID ${args[1]} 已经在清理物品白名单里了")
+                        if (getConfig().whiteListItems.contains(args[1].toInt())) {
+                            sender.sendMessage((getConfig().pluginPrefix + "&cID ${args[1]} 已经在清理物品白名单里了").color())
                         } else {
-                            ClearDropModule.unCleanItems.add(args[1].toInt())
-                            ClearDropModule.simpleConfig.setPathValue(SimpleConfigEntry(ClearDropModule.UNCLEANED_ITEMS, ClearDropModule.unCleanItems))
-                            sender.sendMessage(ClearDropModule.prefix + "&a成功将物品 ID ${args[1]} 加入清理物品白名单")
+                            getConfig().whiteListItems.plus(args[1].toInt())
+                            sender.sendMessage((getConfig().pluginPrefix + "&a成功将物品 ID ${args[1]} 加入清理物品白名单").color())
                         }
                     } else {
-                        sender.sendMessage(ClearDropModule.prefix + "&c请输入有效的物品 ID!")
+                        sender.sendMessage((getConfig().pluginPrefix + "&c请输入有效的物品 ID!").color())
                     }
                 } else {
-                    sender.sendMessage(ClearDropModule.prefix + "/cleardrop add/del [物品ID]")
+                    sender.sendMessage((getConfig().pluginPrefix + "/cleardrop add/del [物品ID]").color())
                 }
                 return true
             }
@@ -66,30 +66,28 @@ object ClearDropCommand : EasyCommand("cleardrop", "ClearDrop's Command") {
             override fun execute(sender: CommandSender, label: String, args: Array<out String>): Boolean {
                 if (sender is Player) {
                     if (sender.inventory.itemInHand != null) {
-                        if (!ClearDropModule.unCleanItems.contains(sender.inventory.itemInHand.id)) {
-                            sender.sendMessage(ClearDropModule.prefix + "&c${sender.inventory.itemInHand.name} 不在清理物品白名单里")
+                        if (!getConfig().whiteListItems.contains(sender.inventory.itemInHand.id)) {
+                            sender.sendMessage((getConfig().pluginPrefix + "&c${sender.inventory.itemInHand.name} 不在清理物品白名单里").color())
                         } else {
-                            ClearDropModule.unCleanItems.remove(sender.inventory.itemInHand.id)
-                            ClearDropModule.simpleConfig.setPathValue(SimpleConfigEntry(ClearDropModule.UNCLEANED_ITEMS, ClearDropModule.unCleanItems))
-                            sender.sendMessage(ClearDropModule.prefix + "&a成功将物品 ${sender.inventory.itemInHand.name} 移出清理物品白名单")
+                            getConfig().whiteListItems.minus(sender.inventory.itemInHand.id)
+                            sender.sendMessage((getConfig().pluginPrefix + "&a成功将物品 ${sender.inventory.itemInHand.name} 移出清理物品白名单").color())
                         }
                     } else {
-                        sender.sendMessage(ClearDropModule.prefix + "手持要移出白名单的物品并使用 /cleardrop del")
+                        sender.sendMessage((getConfig().pluginPrefix + "手持要移出白名单的物品并使用 /cleardrop del").color())
                     }
                 } else if (args.size == 2) {
                     if (StringUtils.isNumeric(args[1])) {
-                        if (ClearDropModule.unCleanItems.contains(args[1].toInt())) {
-                            sender.sendMessage(ClearDropModule.prefix + "&cID ${args[1]} 不在清理物品白名单里了")
+                        if (getConfig().whiteListItems.contains(args[1].toInt())) {
+                            sender.sendMessage((getConfig().pluginPrefix + "&cID ${args[1]} 不在清理物品白名单里了").color())
                         } else {
-                            ClearDropModule.unCleanItems.remove(args[1].toInt())
-                            ClearDropModule.simpleConfig.setPathValue(SimpleConfigEntry(ClearDropModule.UNCLEANED_ITEMS, ClearDropModule.unCleanItems))
-                            sender.sendMessage(ClearDropModule.prefix + "&a成功将物品 ID ${args[1]} 移出清理物品白名单")
+                            getConfig().whiteListItems.minus(args[1].toInt())
+                            sender.sendMessage((getConfig().pluginPrefix + "&a成功将物品 ID ${args[1]} 移出清理物品白名单").color())
                         }
                     } else {
-                        sender.sendMessage(ClearDropModule.prefix + "&c请输入有效的物品 ID!")
+                        sender.sendMessage((getConfig().pluginPrefix + "&c请输入有效的物品 ID!").color())
                     }
                 } else {
-                    sender.sendMessage(ClearDropModule.prefix + "/cleardrop add/del [物品ID]")
+                    sender.sendMessage((getConfig().pluginPrefix + "/cleardrop add/del [物品ID]").color())
                 }
                 return true
             }
@@ -105,18 +103,18 @@ object ClearDropCommand : EasyCommand("cleardrop", "ClearDrop's Command") {
             override fun execute(sender: CommandSender, label: String, args: Array<out String>): Boolean {
                 if (args.size == 2) {
                     if (args[1].isNotBlank()) {
-                        if (ClearDropModule.unCleanWorld.contains(args[1])) {
-                            ClearDropModule.unCleanWorld.remove(args[1])
-                            sender.sendMessage(ClearDropModule.prefix + "&a世界 ${args[1]} 已经从白名单中移除!")
+                        if (getConfig().whiteListWorld.contains(args[1])) {
+                            getConfig().whiteListWorld.minus(args[1])
+                            sender.sendMessage((getConfig().pluginPrefix + "&a世界 ${args[1]} 已经从白名单中移除!").color())
                         } else {
-                            ClearDropModule.unCleanWorld.add(args[1])
-                            sender.sendMessage(ClearDropModule.prefix + "&a世界 ${args[1]} 已经添加至白名单!")
+                            getConfig().whiteListWorld.plus(args[1])
+                            sender.sendMessage((getConfig().pluginPrefix + "&a世界 ${args[1]} 已经添加至白名单!").color())
                         }
                     } else {
-                        sender.sendMessage(ClearDropModule.prefix + "/cleardrop world [世界名]")
+                        sender.sendMessage((getConfig().pluginPrefix + "/cleardrop world [世界名]").color())
                     }
                 } else {
-                    sender.sendMessage(ClearDropModule.prefix + "/cleardrop world [世界名]")
+                    sender.sendMessage((getConfig().pluginPrefix + "/cleardrop world [世界名]").color())
                 }
                 return true
             }
