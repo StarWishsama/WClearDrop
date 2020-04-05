@@ -12,7 +12,7 @@ import top.wetabq.easyapi.command.EasyCommand
 import top.wetabq.easyapi.command.EasySubCommand
 import top.wetabq.easyapi.utils.color
 
-object WClearDropCommand : EasyCommand("cleardrop", "ClearDrop's Command") {
+object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
     init {
         subCommand.add(object : EasySubCommand("clear") {
             override fun execute(sender: CommandSender, label: String, args: Array<out String>): Boolean {
