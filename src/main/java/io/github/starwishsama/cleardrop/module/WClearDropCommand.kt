@@ -3,7 +3,7 @@ package io.github.starwishsama.cleardrop.module
 import cn.nukkit.Player
 import cn.nukkit.command.CommandSender
 import cn.nukkit.command.data.CommandParameter
-import io.github.starwishsama.cleardrop.ClearDropPlugin
+import io.github.starwishsama.cleardrop.WClearDropPlugin
 import io.github.starwishsama.cleardrop.utils.getConfig
 import io.github.starwishsama.cleardrop.utils.runCleanTask
 import org.apache.commons.lang3.StringUtils
@@ -11,11 +11,11 @@ import top.wetabq.easyapi.command.EasyCommand
 import top.wetabq.easyapi.command.EasySubCommand
 import top.wetabq.easyapi.utils.color
 
-object ClearDropCommand : EasyCommand("cleardrop", "ClearDrop's Command") {
+object WClearDropCommand : EasyCommand("cleardrop", "ClearDrop's Command") {
     init {
         subCommand.add(object : EasySubCommand("clear") {
             override fun execute(sender: CommandSender, label: String, args: Array<out String>): Boolean {
-                runCleanTask(ClearDropPlugin.instance.server)
+                runCleanTask(WClearDropPlugin.instance.server)
                 return true
             }
 
@@ -32,7 +32,7 @@ object ClearDropCommand : EasyCommand("cleardrop", "ClearDrop's Command") {
                         if (getConfig().whiteListItems.contains(sender.inventory.itemInHand.id)) {
                             sender.sendMessage((getConfig().pluginPrefix + "&c${sender.inventory.itemInHand.name} 已经在清理物品白名单里了").color())
                         } else {
-                            ClearDropModule.simpleConfig.safeGetData("clearDrop")
+                            WClearDropModule.simpleConfig.safeGetData("clearDrop")
                             getConfig().whiteListItems.plus(sender.inventory.itemInHand.id)
                             sender.sendMessage((getConfig().pluginPrefix + "&a成功将物品 ${sender.inventory.itemInHand.name} 加入清理物品白名单").color())
                         }

@@ -8,6 +8,6 @@ data class Config(var clearDropCD: Int = 240,
                   var doCleanAnimal: Boolean = true,
                   var doCleanMonster: Boolean = true,
                   var doCleanProjectile: Boolean = true,
-                  var pluginPrefix: String = "&bClearDrop &7>&r ",
+                  var pluginPrefix: String = "&bWClearDrop &7>&r ",
                   var whiteListItems: List<Int> = mutableListOf(),
                   var whiteListWorld: List<String> = mutableListOf())

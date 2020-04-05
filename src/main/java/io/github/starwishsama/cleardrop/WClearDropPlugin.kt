@@ -1,16 +1,16 @@
 package io.github.starwishsama.cleardrop
 
 import cn.nukkit.plugin.PluginBase
-import io.github.starwishsama.cleardrop.module.ClearDropModule
+import io.github.starwishsama.cleardrop.module.WClearDropModule
 import top.wetabq.easyapi.module.EasyAPIModuleManager
 
-class ClearDropPlugin : PluginBase() {
+class WClearDropPlugin : PluginBase() {
     override fun onEnable() {
         instance = this
-        EasyAPIModuleManager.register(ClearDropModule)
+        EasyAPIModuleManager.register(WClearDropModule)
     }
 
     companion object {
-        lateinit var instance: ClearDropPlugin
+        lateinit var instance: WClearDropPlugin
     }
 }

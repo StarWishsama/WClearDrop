@@ -2,8 +2,8 @@ package io.github.starwishsama.cleardrop.module
 
 import cn.nukkit.Player
 import cn.nukkit.event.player.PlayerChatEvent
-import io.github.starwishsama.cleardrop.ClearDropPlugin
 import io.github.starwishsama.cleardrop.Config
+import io.github.starwishsama.cleardrop.WClearDropPlugin
 import io.github.starwishsama.cleardrop.utils.runCleanTask
 import top.wetabq.easyapi.api.defaults.AsyncListenerAPI
 import top.wetabq.easyapi.api.defaults.CommandAPI
@@ -15,7 +15,7 @@ import top.wetabq.easyapi.module.ModuleInfo
 import top.wetabq.easyapi.module.ModuleVersion
 import top.wetabq.easyapi.module.SimpleEasyAPIModule
 
-object ClearDropModule : SimpleEasyAPIModule() {
+object WClearDropModule : SimpleEasyAPIModule() {
 
     private const val MODULE_NAME = "ClearDropModule"
     private const val AUTHOR = "StarWishsama"
@@ -26,7 +26,7 @@ object ClearDropModule : SimpleEasyAPIModule() {
     lateinit var simpleConfig: SimpleCodecEasyConfig<Config>
 
     override fun getModuleInfo(): ModuleInfo = ModuleInfo(
-            ClearDropPlugin.instance,
+            WClearDropPlugin.instance,
             MODULE_NAME,
             AUTHOR,
             ModuleVersion(1, 0, 0)
@@ -35,7 +35,7 @@ object ClearDropModule : SimpleEasyAPIModule() {
     override fun moduleRegister() {
         // Setup config
 
-        simpleConfig = object : SimpleCodecEasyConfig<Config>("clearDrop", ClearDropPlugin.instance, Config::class.java, Config()) {}
+        simpleConfig = object : SimpleCodecEasyConfig<Config>("clearDrop", WClearDropPlugin.instance, Config::class.java, Config()) {}
 
         simpleConfig.init()
 
@@ -48,21 +48,21 @@ object ClearDropModule : SimpleEasyAPIModule() {
             override fun onPlayerChatEvent(event: PlayerChatEvent) {
                 event.player.sendMessage(isCoolDown(event.player).toString())
                 if (event.message.contains(simpleConfig.safeGetData("clearDrop").requestMessage) && !isCoolDown(event.player)) {
-                    runCleanTask(ClearDropPlugin.instance.server)
+                    runCleanTask(WClearDropPlugin.instance.server)
                 }
             }
         })
 
 
         SimplePluginTaskAPI.delayRepeating(20 * simpleConfig.safeGetData("clearDrop").clearDropCD, 20 * simpleConfig.safeGetData("clearDrop").clearDropCD) { _, _ ->
-            runCleanTask(ClearDropPlugin.instance.server)
+            runCleanTask(WClearDropPlugin.instance.server)
         }
 
         this.registerAPI(SIMPLE_CONFIG, ConfigAPI())
                 .add(simpleConfig)
 
         this.registerAPI("clearDropCommand", CommandAPI())
-                .add(ClearDropCommand)
+                .add(WClearDropCommand)
     }
 
     override fun moduleDisable() {
