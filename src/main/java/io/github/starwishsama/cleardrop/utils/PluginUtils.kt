@@ -56,6 +56,7 @@ fun runCleanTask(server: Server) {
             countDown--
         } else {
             val result = clearDrop()
+            countDown = getConfig().countDown
             server.broadcastMessage((getConfig().pluginPrefix + getConfig().cleanEntityMsg.replace("%item%", result[0].toString()).replace("%entity%", result[1].toString())).color())
             task.cancel()
         }
