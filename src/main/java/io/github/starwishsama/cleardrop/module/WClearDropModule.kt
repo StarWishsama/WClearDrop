@@ -46,7 +46,6 @@ object WClearDropModule : SimpleEasyAPIModule() {
 
         AsyncListenerAPI.add(object : AsyncListener {
             override fun onPlayerChatEvent(event: PlayerChatEvent) {
-                event.player.sendMessage(isCoolDown(event.player).toString())
                 if (event.message.contains(simpleConfig.safeGetData("clearDrop").requestMessage) && !isCoolDown(event.player)) {
                     runCleanTask(WClearDropPlugin.instance.server)
                 }
