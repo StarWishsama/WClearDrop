@@ -3,6 +3,7 @@ package io.github.starwishsama.cleardrop.module
 import cn.nukkit.Player
 import cn.nukkit.command.CommandSender
 import cn.nukkit.command.ConsoleCommandSender
+import cn.nukkit.command.data.CommandParamType
 import cn.nukkit.command.data.CommandParameter
 import io.github.starwishsama.cleardrop.WClearDropPlugin
 import io.github.starwishsama.cleardrop.utils.getConfig
@@ -39,7 +40,7 @@ object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
                             getConfig().whiteListItems.plus(sender.inventory.itemInHand.id)
                             sender.sendMessage((getConfig().pluginPrefix + "&a成功将物品 ${sender.inventory.itemInHand.name} 加入清理物品白名单").color())
                         }
-                    } else if (args.size == 2) {
+                    } else if (args.size > 1) {
                         if (StringUtils.isNumeric(args[1])) {
                             if (getConfig().whiteListItems.contains(args[1].toInt())) {
                                 sender.sendMessage((getConfig().pluginPrefix + "&cID ${args[1]} 已经在清理物品白名单里了").color())
@@ -51,7 +52,7 @@ object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
                             sender.sendMessage((getConfig().pluginPrefix + "&c请输入有效的物品 ID!").color())
                         }
                     } else {
-                        sender.sendMessage((getConfig().pluginPrefix + "/cleardrop add/del [物品ID]").color())
+                        sender.sendMessage((getConfig().pluginPrefix + "/wcleardrop add/del [物品ID]").color())
                     }
                 } else {
                     sender.sendMessage((getConfig().pluginPrefix + "&c你没有权限!").color())
@@ -63,7 +64,9 @@ object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
 
             override fun getDescription() = "Add item not to clean"
 
-            override fun getParameters(): Array<CommandParameter>? = null
+            override fun getParameters(): Array<CommandParameter>? = arrayOf(
+                    CommandParameter("add", CommandParamType.STRING, true)
+            )
         })
         subCommand.add(object : EasySubCommand("remove") {
             override fun execute(sender: CommandSender, label: String, args: Array<out String>): Boolean {
@@ -79,7 +82,7 @@ object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
                         } else {
                             sender.sendMessage((getConfig().pluginPrefix + "手持要移出白名单的物品并使用 /cleardrop del").color())
                         }
-                    } else if (args.size == 2) {
+                    } else if (args.size > 1) {
                         if (StringUtils.isNumeric(args[1])) {
                             if (getConfig().whiteListItems.contains(args[1].toInt())) {
                                 sender.sendMessage((getConfig().pluginPrefix + "&cID ${args[1]} 不在清理物品白名单里了").color())
@@ -91,7 +94,7 @@ object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
                             sender.sendMessage((getConfig().pluginPrefix + "&c请输入有效的物品 ID!").color())
                         }
                     } else {
-                        sender.sendMessage((getConfig().pluginPrefix + "/cleardrop add/del [物品ID]").color())
+                        sender.sendMessage((getConfig().pluginPrefix + "/wcleardrop add/del [物品ID]").color())
                     }
                 } else {
                     sender.sendMessage((getConfig().pluginPrefix + "&c你没有权限!").color())
@@ -103,26 +106,24 @@ object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
 
             override fun getDescription() = "Remove item not to clean"
 
-            override fun getParameters(): Array<CommandParameter>? = null
+            override fun getParameters(): Array<CommandParameter>? = arrayOf(
+                    CommandParameter("remove", CommandParamType.STRING, true)
+            )
         })
 
         subCommand.add(object : EasySubCommand("world") {
             override fun execute(sender: CommandSender, label: String, args: Array<out String>): Boolean {
                 if (sender.isOp || sender is ConsoleCommandSender) {
-                    if (args.size == 2) {
-                        if (args[1].isNotBlank()) {
-                            if (getConfig().whiteListWorld.contains(args[1])) {
-                                getConfig().whiteListWorld.minus(args[1])
-                                sender.sendMessage((getConfig().pluginPrefix + "&a世界 ${args[1]} 已经从白名单中移除!").color())
-                            } else {
-                                getConfig().whiteListWorld.plus(args[1])
-                                sender.sendMessage((getConfig().pluginPrefix + "&a世界 ${args[1]} 已经添加至白名单!").color())
-                            }
+                    if (args.size > 1 && args[1].isNotEmpty()) {
+                        if (!getConfig().whiteListWorld.isNullOrEmpty() && getConfig().whiteListWorld.contains(args[1])) {
+                            getConfig().whiteListWorld = getConfig().whiteListWorld.minus(args[1])
+                            sender.sendMessage((getConfig().pluginPrefix + "&a世界 ${args[1]} 已经从白名单中移除!").color())
                         } else {
-                            sender.sendMessage((getConfig().pluginPrefix + "/cleardrop world [世界名]").color())
+                            getConfig().whiteListWorld = getConfig().whiteListWorld.plus(args[1])
+                            sender.sendMessage((getConfig().pluginPrefix + "&a世界 ${args[1]} 已经添加至白名单!").color())
                         }
                     } else {
-                        sender.sendMessage((getConfig().pluginPrefix + "/cleardrop world [世界名]").color())
+                        sender.sendMessage((getConfig().pluginPrefix + "/wcleardrop world [世界名]").color())
                     }
                 } else {
                     sender.sendMessage((getConfig().pluginPrefix + "&c你没有权限!").color())
@@ -134,7 +135,9 @@ object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
 
             override fun getDescription(): String = "Add/Remove whitelist world"
 
-            override fun getParameters(): Array<CommandParameter>? = null
+            override fun getParameters(): Array<CommandParameter>? = arrayOf(
+                    CommandParameter("world", CommandParamType.STRING, false)
+            )
         })
 
         loadCommandBase()
