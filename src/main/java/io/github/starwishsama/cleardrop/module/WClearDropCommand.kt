@@ -140,6 +140,21 @@ object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
             )
         })
 
+        /**subCommand.add(object : EasySubCommand("reload"){
+        override fun execute(sender: CommandSender, label: String, args: Array<out String>): Boolean {
+
+        }
+
+        override fun getAliases(): Array<String>? = arrayOf("rload", "rl")
+
+        override fun getDescription(): String = "Reload config"
+
+        override fun getParameters(): Array<CommandParameter>? = arrayOf(
+        CommandParameter("reload", CommandParamType.STRING, false)
+        )
+
+        })*/
+
         loadCommandBase()
     }
 }

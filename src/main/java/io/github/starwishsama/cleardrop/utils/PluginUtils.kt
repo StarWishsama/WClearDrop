@@ -1,5 +1,6 @@
 package io.github.starwishsama.cleardrop.utils
 
+import cn.nukkit.Player
 import cn.nukkit.Server
 import cn.nukkit.entity.item.EntityItem
 import cn.nukkit.entity.mob.EntityMob
@@ -64,5 +65,11 @@ fun runCleanTask(server: Server) {
 }
 
 fun getConfig() = WClearDropModule.simpleConfig.safeGetData("clearDrop")
+
+fun sendMessageWithPrefix(sender: Player, plain: String) {
+    sender.sendMessage("${getConfig().pluginPrefix}$plain".color())
+}
+
+fun isPluginExists(name: String): Boolean = WClearDropPlugin.instance.server.pluginManager.getPlugin(name) != null
 
 
