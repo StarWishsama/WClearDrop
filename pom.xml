@@ -9,7 +9,7 @@
     <version>1.0.3-RELEASE</version>
 
     <properties>
-        <kotlin.version>1.3.70</kotlin.version>
+        <kotlin.version>1.5.20</kotlin.version>
     </properties>
 
     <repositories>
