@@ -27,9 +27,9 @@ class WClearDropPlugin : PluginBase() {
 
             EasyAPIModuleManager.register(WClearDropModule)
         } catch (t: Throwable) {
-            WClearDropPlugin.logger.warning("在加载时发生了意料之外的错误", t)
-            WClearDropPlugin.logger.warning("你可以在这里反馈问题: ")
-            WClearDropPlugin.logger.warning("https://github.com/StarWishsama/WClearDrop/issues")
+            logger.warning("在加载时发生了意料之外的错误", t)
+            logger.warning("你可以在这里反馈问题: ")
+            logger.warning("https://github.com/StarWishsama/WClearDrop/issues")
         }
     }
 

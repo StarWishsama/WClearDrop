@@ -15,8 +15,9 @@ object MobFarmChecker {
     fun init() {
         if (getConfig().doCleanMobFarming) {
             SimplePluginTaskAPI.delayRepeating(
-                    getConfig().cleanMobFarmingDelay * 20,
-                    getConfig().cleanMobFarmingDelay * 20)
+                getConfig().cleanMobFarmingDelay * 20,
+                getConfig().cleanMobFarmingDelay * 20
+            )
             { _, _ -> checkForMobFarm() }
         }
     }
@@ -31,7 +32,8 @@ object MobFarmChecker {
 
     private fun countAndCleanEntities(entity: Entity, level: Level) {
         val entities = level.getNearbyEntities(
-                SimpleAxisAlignedBB(entity.x, entity.y, entity.z, entity.x + 2.15, entity.y + 4.25, entity.z + 2.15), entity)
+            SimpleAxisAlignedBB(entity.x, entity.y, entity.z, entity.x + 2.15, entity.y + 4.25, entity.z + 2.15), entity
+        )
         var count = 0
         entities.forEach { if (isRemovableEntity(it)) count++ }
 
