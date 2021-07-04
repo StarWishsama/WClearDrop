@@ -27,17 +27,22 @@ object WClearDropModule : SimpleEasyAPIModule() {
     lateinit var simpleConfig: SimpleCodecEasyConfig<PluginConfig>
 
     override fun getModuleInfo(): ModuleInfo = ModuleInfo(
-            WClearDropPlugin.instance,
-            MODULE_NAME,
-            AUTHOR,
-            ModuleVersion(1, 0, 0)
+        WClearDropPlugin.instance,
+        MODULE_NAME,
+        AUTHOR,
+        ModuleVersion(1, 0, 0)
     )
 
     override fun moduleRegister() {
         try {
             // Setup config
 
-            simpleConfig = object : SimpleCodecEasyConfig<PluginConfig>("clearDrop", WClearDropPlugin.instance, PluginConfig::class.java, PluginConfig()) {}
+            simpleConfig = object : SimpleCodecEasyConfig<PluginConfig>(
+                "clearDrop",
+                WClearDropPlugin.instance,
+                PluginConfig::class.java,
+                PluginConfig()
+            ) {}
 
             simpleConfig.init()
 
@@ -48,29 +53,35 @@ object WClearDropModule : SimpleEasyAPIModule() {
 
             AsyncListenerAPI.add(object : AsyncListener {
                 override fun onPlayerChatEvent(event: PlayerChatEvent) {
-                    if (event.message.contains(simpleConfig.safeGetData("clearDrop").requestMessage) && !isCoolDown(event.player)) {
+                    if (event.message.contains(simpleConfig.safeGetData("clearDrop").requestMessage) && !isCoolDown(
+                            event.player
+                        )
+                    ) {
                         runCleanTask(WClearDropPlugin.instance.server)
                     }
                 }
             })
 
 
-            SimplePluginTaskAPI.delayRepeating(20 * simpleConfig.safeGetData("clearDrop").clearDropCD, 20 * simpleConfig.safeGetData("clearDrop").clearDropCD) { _, _ ->
+            SimplePluginTaskAPI.delayRepeating(
+                20 * simpleConfig.safeGetData("clearDrop").clearDropCD,
+                20 * simpleConfig.safeGetData("clearDrop").clearDropCD
+            ) { _, _ ->
                 runCleanTask(WClearDropPlugin.instance.server)
             }
 
             this.registerAPI(SIMPLE_CONFIG, ConfigAPI())
-                    .add(simpleConfig)
+                .add(simpleConfig)
 
             this.registerAPI("clearDropCommand", CommandAPI())
-                    .add(WClearDropCommand)
+                .add(WClearDropCommand)
 
             MobFarmChecker.init()
 
-        } catch (t: Throwable) {
-            WClearDropPlugin.logger.warning("在注册组件时发生了意料之外的错误", t)
-            WClearDropPlugin.logger.warning("你可以在这里反馈问题: ")
-            WClearDropPlugin.logger.warning("https://github.com/StarWishsama/WClearDrop/issues")
+        } catch (e: Exception) {
+            WClearDropPlugin.pluginLogger.warning("在注册组件时发生了意料之外的错误", e)
+            WClearDropPlugin.pluginLogger.warning("你可以在这里反馈问题: ")
+            WClearDropPlugin.pluginLogger.warning("https://github.com/StarWishsama/WClearDrop/issues")
         }
     }
 
