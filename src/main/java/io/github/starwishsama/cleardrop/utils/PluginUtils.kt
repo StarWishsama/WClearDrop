@@ -75,7 +75,9 @@ fun runCleanTask(server: Server) {
     }
 }
 
-fun getConfig(): PluginConfig = WClearDropModule.simpleConfig.safeGetData("clearDrop")
+fun getConfig(): PluginConfig {
+    return WClearDropModule.simpleConfig.safeGetData("clearDrop")
+}
 
 fun sendMessageWithPrefix(sender: Player, plain: String) {
     sender.sendMessage("${getConfig().pluginPrefix}$plain".color())

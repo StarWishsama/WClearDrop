@@ -6,7 +6,7 @@
 
     <groupId>io.github.starwishsama.cleardrop</groupId>
     <artifactId>WClearDrop</artifactId>
-    <version>1.0.3-RELEASE</version>
+    <version>1.0.4-RELEASE</version>
 
     <properties>
         <kotlin.version>1.5.20</kotlin.version>
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>top.wetabq.easyapi</groupId>
             <artifactId>EasyAPI</artifactId>
-            <version>1.1.12.1</version>
+            <version>1.1.8</version>
         </dependency>
         <dependency>
             <groupId>cn.nukkit</groupId>
