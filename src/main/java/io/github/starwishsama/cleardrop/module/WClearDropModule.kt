@@ -22,14 +22,10 @@ object WClearDropModule : SimpleEasyAPIModule() {
 	private const val AUTHOR = "StarWishsama"
 
 	private const val SIMPLE_CONFIG = "clearDropSimpleConfig"
+
 	private var nextRequestTime = mutableMapOf<Player, Long>()
 
-	val simpleConfig: SimpleCodecEasyConfig<PluginConfig> = object : SimpleCodecEasyConfig<PluginConfig>(
-		"clearDrop",
-		WClearDropPlugin.instance,
-		PluginConfig::class.java,
-		PluginConfig()
-	) {}.also { it.init() }
+	lateinit var simpleConfig: SimpleCodecEasyConfig<PluginConfig>
 
 	override fun getModuleInfo(): ModuleInfo = ModuleInfo(
 		WClearDropPlugin.instance,
@@ -40,6 +36,15 @@ object WClearDropModule : SimpleEasyAPIModule() {
 
 	override fun moduleRegister() {
 		try {
+			simpleConfig = object : SimpleCodecEasyConfig<PluginConfig>(
+				"clearDrop",
+				WClearDropPlugin.instance,
+				PluginConfig::class.java,
+				PluginConfig()
+			) {}
+
+			simpleConfig.init()
+
 			// Setup config
 			if (!simpleConfig.simpleConfig.containsKey("clearDrop")) {
 				simpleConfig.simpleConfig["clearDrop"] = simpleConfig.getDefaultValue()
