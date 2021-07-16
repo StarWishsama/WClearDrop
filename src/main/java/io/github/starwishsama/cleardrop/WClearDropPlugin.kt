@@ -3,7 +3,7 @@ package io.github.starwishsama.cleardrop
 import cn.nukkit.plugin.PluginBase
 import cn.nukkit.plugin.PluginLogger
 import io.github.starwishsama.cleardrop.module.WClearDropModule
-import io.github.starwishsama.cleardrop.utils.isPluginExists
+import io.github.starwishsama.cleardrop.utils.PluginUtils.isPluginExists
 import top.wetabq.easyapi.module.EasyAPIModuleManager
 
 class WClearDropPlugin : PluginBase() {

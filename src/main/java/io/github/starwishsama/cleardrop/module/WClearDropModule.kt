@@ -5,7 +5,8 @@ import cn.nukkit.event.player.PlayerChatEvent
 import io.github.starwishsama.cleardrop.PluginConfig
 import io.github.starwishsama.cleardrop.WClearDropPlugin
 import io.github.starwishsama.cleardrop.utils.MobFarmChecker
-import io.github.starwishsama.cleardrop.utils.runCleanTask
+import io.github.starwishsama.cleardrop.utils.PluginUtils.getConfig
+import io.github.starwishsama.cleardrop.utils.PluginUtils.runCleanTask
 import top.wetabq.easyapi.api.defaults.AsyncListenerAPI
 import top.wetabq.easyapi.api.defaults.CommandAPI
 import top.wetabq.easyapi.api.defaults.ConfigAPI
@@ -51,11 +52,12 @@ object WClearDropModule : SimpleEasyAPIModule() {
 				simpleConfig.save()
 			}
 
+			this.registerAPI(SIMPLE_CONFIG, ConfigAPI())
+				.add(simpleConfig)
+
 			AsyncListenerAPI.add(object : AsyncListener {
 				override fun onPlayerChatEvent(event: PlayerChatEvent) {
-					if (event.message.contains(simpleConfig.safeGetData("clearDrop").requestMessage) && !isCoolDown(
-							event.player
-						)
+					if (event.message.contains(getConfig().requestMessage) && !isCoolDown(event.player)
 					) {
 						runCleanTask(WClearDropPlugin.instance.server)
 					}
@@ -64,14 +66,11 @@ object WClearDropModule : SimpleEasyAPIModule() {
 
 
 			SimplePluginTaskAPI.delayRepeating(
-				20 * simpleConfig.safeGetData("clearDrop").clearDropCD,
-				20 * simpleConfig.safeGetData("clearDrop").clearDropCD
+				20 * getConfig().clearDropCD,
+				20 * getConfig().clearDropCD
 			) { _, _ ->
 				runCleanTask(WClearDropPlugin.instance.server)
 			}
-
-			this.registerAPI(SIMPLE_CONFIG, ConfigAPI())
-				.add(simpleConfig)
 
 			this.registerAPI("clearDropCommand", CommandAPI())
 				.add(WClearDropCommand)
