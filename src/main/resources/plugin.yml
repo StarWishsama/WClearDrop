@@ -1,6 +1,6 @@
 name: WClearDrop
 main: io.github.starwishsama.cleardrop.WClearDropPlugin
-version: ${project.version}
+version: 1.0.5
 api: [ "1.0.0" ]
 load: STARTUP
 author: StarWishsama
