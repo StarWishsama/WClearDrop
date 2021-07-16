@@ -1,6 +1,5 @@
 package io.github.starwishsama.cleardrop.utils
 
-import cn.nukkit.Player
 import cn.nukkit.Server
 import cn.nukkit.entity.item.EntityItem
 import cn.nukkit.entity.mob.EntityMob
@@ -14,9 +13,40 @@ import top.wetabq.easyapi.api.defaults.SimplePluginTaskAPI
 import top.wetabq.easyapi.utils.color
 
 object PluginUtils {
-    var countDown = -1
+    private var countDown = -1
 
-    fun clearDrop(): Array<Int> {
+    fun runCleanTask(server: Server) {
+        if (countDown == -1) {
+            countDown = getConfig().countDown
+        }
+
+        SimplePluginTaskAPI.repeating(20) { task, _ ->
+            if (countDown > 0) {
+                if (countDown == 60 || countDown == 30 || countDown == 10 || countDown == 5) {
+                    server.broadcastMessage(
+                        (getConfig().pluginPrefix + getConfig().warnMessage.replace(
+                            "%second%",
+                            countDown.toString()
+                        )).color()
+                    )
+                }
+                countDown--
+            } else {
+                val result = clearDrop()
+                countDown = getConfig().countDown
+                server.broadcastMessage(
+                    (getConfig().pluginPrefix + getConfig().cleanEntityMsg
+                        .replace("%item%", result[0].toString())
+                        .replace("%entity%", result[1].toString()))
+                        .color()
+                )
+
+                task.cancel()
+            }
+        }
+    }
+
+    private fun clearDrop(): Array<Int> {
         val server = WClearDropPlugin.instance.server
         val levels = server.levels
         var itemCount = 0
@@ -50,42 +80,8 @@ object PluginUtils {
         return arrayOf(itemCount, entityCount)
     }
 
-    fun runCleanTask(server: Server) {
-        if (countDown == -1) {
-            countDown = getConfig().countDown
-        }
-
-        SimplePluginTaskAPI.repeating(20) { task, _ ->
-            if (countDown > 0) {
-                if (countDown == 60 || countDown == 30 || countDown == 10 || countDown == 5) {
-                    server.broadcastMessage(
-                        (getConfig().pluginPrefix + getConfig().warnMessage.replace(
-                            "%second%",
-                            countDown.toString()
-                        )).color()
-                    )
-                }
-                countDown--
-            } else {
-                val result = clearDrop()
-                countDown = getConfig().countDown
-                server.broadcastMessage(
-                    (getConfig().pluginPrefix + getConfig().cleanEntityMsg.replace(
-                        "%item%",
-                        result[0].toString()
-                    ).replace("%entity%", result[1].toString())).color()
-                )
-                task.cancel()
-            }
-        }
-    }
-
     fun getConfig(): PluginConfig {
         return WClearDropModule.simpleConfig.safeGetData("clearDrop")
-    }
-
-    fun sendMessageWithPrefix(sender: Player, plain: String) {
-        sender.sendMessage("${getConfig().pluginPrefix}$plain".color())
     }
 
     fun isPluginExists(server: Server, name: String): Boolean = server.pluginManager.getPlugin(name) != null

@@ -23,7 +23,7 @@ object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
 				return true
 			}
 
-			override fun getAliases(): Array<String>? = arrayOf("cl")
+			override fun getAliases(): Array<String> = arrayOf("cl")
 
 			override fun getDescription() = "Execute clean task by command"
 
@@ -64,8 +64,8 @@ object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
 
 			override fun getDescription() = "Add item not to clean"
 
-			override fun getParameters(): Array<CommandParameter>? = arrayOf(
-				CommandParameter("add", CommandParamType.STRING, true)
+			override fun getParameters(): Array<CommandParameter> = arrayOf(
+				CommandParameter.newType("add", true, CommandParamType.STRING)
 			)
 		})
 		subCommand.add(object : EasySubCommand("remove") {
@@ -106,8 +106,8 @@ object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
 
 			override fun getDescription() = "Remove item not to clean"
 
-			override fun getParameters(): Array<CommandParameter>? = arrayOf(
-				CommandParameter("remove", CommandParamType.STRING, true)
+			override fun getParameters(): Array<CommandParameter> = arrayOf(
+				CommandParameter.newType("remove", true, CommandParamType.STRING)
 			)
 		})
 
@@ -131,29 +131,14 @@ object WClearDropCommand : EasyCommand("wcleardrop", "WClearDrop's Command") {
 				return true
 			}
 
-			override fun getAliases(): Array<String>? = arrayOf("w")
+			override fun getAliases(): Array<String> = arrayOf("w")
 
 			override fun getDescription(): String = "Add/Remove whitelist world"
 
-			override fun getParameters(): Array<CommandParameter>? = arrayOf(
-				CommandParameter("world", CommandParamType.STRING, false)
+			override fun getParameters(): Array<CommandParameter> = arrayOf(
+				CommandParameter.newType("world", false, CommandParamType.STRING)
 			)
 		})
-
-		/**subCommand.add(object : EasySubCommand("reload"){
-		override fun execute(sender: CommandSender, label: String, args: Array<out String>): Boolean {
-
-		}
-
-		override fun getAliases(): Array<String>? = arrayOf("rload", "rl")
-
-		override fun getDescription(): String = "Reload config"
-
-		override fun getParameters(): Array<CommandParameter>? = arrayOf(
-		CommandParameter("reload", CommandParamType.STRING, false)
-		)
-
-		})*/
 
 		loadCommandBase()
 	}

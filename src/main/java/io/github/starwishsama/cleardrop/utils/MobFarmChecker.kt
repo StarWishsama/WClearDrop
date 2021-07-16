@@ -13,7 +13,7 @@ import top.wetabq.easyapi.api.defaults.SimplePluginTaskAPI
 object MobFarmChecker {
 	private val levels = WClearDropPlugin.instance.server.levels
 
-	fun init() {
+	fun run() {
 		if (getConfig().doCleanMobFarming) {
 			SimplePluginTaskAPI.delayRepeating(
 				getConfig().cleanMobFarmingDelay * 20,

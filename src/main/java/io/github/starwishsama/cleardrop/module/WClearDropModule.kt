@@ -75,7 +75,7 @@ object WClearDropModule : SimpleEasyAPIModule() {
 			this.registerAPI("clearDropCommand", CommandAPI())
 				.add(WClearDropCommand)
 
-			MobFarmChecker.init()
+			MobFarmChecker.run()
 
 		} catch (e: Exception) {
 			WClearDropPlugin.pluginLogger.warning("在注册组件时发生了意料之外的错误", e)
