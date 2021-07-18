@@ -44,6 +44,8 @@ object WClearDropModule : SimpleEasyAPIModule() {
 				PluginConfig()
 			) {}
 
+			WClearDropPlugin.pluginLogger.info("正在加载配置文件...")
+
 			simpleConfig.init()
 
 			// Setup config
@@ -63,7 +65,6 @@ object WClearDropModule : SimpleEasyAPIModule() {
 					}
 				}
 			})
-
 
 			SimplePluginTaskAPI.delayRepeating(
 				20 * getConfig().clearDropCD,

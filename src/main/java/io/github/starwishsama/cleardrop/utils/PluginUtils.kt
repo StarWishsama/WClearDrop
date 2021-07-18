@@ -51,6 +51,7 @@ object PluginUtils {
         val levels = server.levels
         var itemCount = 0
         var entityCount = 0
+
         for ((_, level) in levels) {
             if (!getConfig().whiteListWorld.contains(level.name)) {
                 for (entity in level.entities) {
@@ -65,7 +66,7 @@ object PluginUtils {
                             level.removeEntity(entity)
                             entityCount++
                         }
-                        entity is EntityAnimal || entity is EntityWaterAnimal && getConfig().doCleanAnimal -> {
+                        (entity is EntityAnimal || entity is EntityWaterAnimal) && getConfig().doCleanAnimal -> {
                             level.removeEntity(entity)
                             entityCount++
                         }
